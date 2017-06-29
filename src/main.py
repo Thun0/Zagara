@@ -5,6 +5,7 @@ from model import Model
 client = discord.Client()
 model = Model()
 
+
 @client.event
 async def on_ready():
     print('Logged in as')
@@ -25,6 +26,9 @@ async def on_message(message):
         await client.send_message(message.channel, model.get_help_message())
     elif message.content.startswith('!roll'):
         await client.send_message(message.channel, model.roll_dice(message))
+    #elif message.content.startswith('!vote'):
+    #    await client.send_message(message.channel, model.roll_dice(message))
+    # TODO: message user, not channel
 
 
 client.run('MzI5NTcwODM5NjUxNTQ5MTk0.DDZJzA.vPLeGDPXlY2ChrjGPCf86X6rDog')

@@ -5,13 +5,10 @@ class Model:
 
     def __init__(self):
         self.poll = None
-        self.message = ""
-        self.poll_message = ""
 
     def create_poll(self, message):
-        self.poll = Poll(message)
-        self.poll_message = self.poll.get_message()
-        return "@everyone\n" + self.get_poll_message()
+        self.poll = Poll()
+        return self.poll.create(message)
 
     def roll_dice(self, message):
         sides = message.content[6:]
@@ -19,19 +16,17 @@ class Model:
             val = Dice.roll(int(sides))
             return "Wyrzucono: " + str(val)
 
-    def get_message(self):
-        return self.message
-
     def get_poll_message(self):
         if self.poll is None:
             return "Obecnie nie trwa żadna ankieta"
-        return self.poll_message
+        return self.poll.get_results()
 
     def end_poll(self):
         if self.poll is None:
             return "Obecnie nie trwa żadna ankieta"
+        msg = "@everyone Ankieta zakończona!\n\n" + self.poll.get_results()[9:]
         self.poll = None
-        return "@everyone Ankieta zakończona!\n" + self.poll_message[9:]
+        return msg
 
     def get_help_message(self):
         msg = "Dostępne komendy:\n"
