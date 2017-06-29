@@ -1,8 +1,9 @@
 import discord
 import asyncio
+from model import Model
 
 client = discord.Client()
-
+model = Model()
 
 @client.event
 async def on_ready():
@@ -14,17 +15,16 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    if message.content.startswith('!test'):
-        counter = 0
-        tmp = await client.send_message(message.channel, 'Calculating messages...')
-        async for log in client.logs_from(message.channel, limit=100):
-            if log.author == message.author:
-                counter += 1
-
-        await client.edit_message(tmp, 'You have {} messages.'.format(counter))
-    elif message.content.startswith('!sleep'):
-        await asyncio.sleep(5)
-        await client.send_message(message.channel, 'Done sleeping')
+    if message.content.startswith('!pollc'):
+        await client.send_message(message.channel, model.create_poll(message))
+    elif message.content.startswith('!pollend'):
+        await client.send_message(message.channel, model.end_poll())
+    elif message.content.startswith('!poll'):
+        await client.send_message(message.channel, model.get_poll_message())
+    elif message.content.startswith('!help'):
+        await client.send_message(message.channel, model.get_help_message())
+    elif message.content.startswith('!roll'):
+        await client.send_message(message.channel, model.roll_dice(message))
 
 
 client.run('MzI5NTcwODM5NjUxNTQ5MTk0.DDZJzA.vPLeGDPXlY2ChrjGPCf86X6rDog')
