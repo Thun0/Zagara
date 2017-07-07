@@ -3,8 +3,7 @@ import asyncio
 from model import Model
 
 client = discord.Client()
-model = Model()
-
+models = {}
 
 @client.event
 async def on_ready():
@@ -16,6 +15,10 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
+    model = models.get(message.channel)
+    if model is None:
+        model = Model()
+        models[message.channel] = model
     if message.content.startswith('!pollc'):
         await client.send_message(message.channel, model.create_poll(message))
     elif message.content.startswith('!pollend'):
@@ -26,8 +29,8 @@ async def on_message(message):
         await client.send_message(message.channel, model.get_help_message())
     elif message.content.startswith('!roll'):
         await client.send_message(message.channel, model.roll_dice(message))
-    #elif message.content.startswith('!vote'):
-    #    await client.send_message(message.channel, model.roll_dice(message))
+    elif message.content.startswith('!vote'):
+        await client.send_message(message.channel, model.vote_poll(message))
     # TODO: message user, not channel
 
 
